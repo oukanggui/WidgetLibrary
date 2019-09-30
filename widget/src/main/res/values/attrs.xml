@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--菜单布局自定义属性-->
+    <declare-styleable name="MenuLayout">
+        <!--1、背景颜色-->
+        <attr name="itemBackgroundColor" format="reference|color" />
+        <!--2、底部分隔线是否可见，默认为true-->
+        <attr name="lineVisible" format="boolean" />
+        <!--3、左边设置：图标、显示文字、文字颜色以及大小-->
+        <attr name="leftIcon" format="reference" />
+        <!--文字-->
+        <attr name="leftText" format="reference|string" />
+        <!--文字颜色-->
+        <attr name="leftTextColor" format="reference|color" />
+        <!--文字大小,单位sp-->
+        <attr name="leftTextSize" format="integer" />
+        <!--4、右边设置：图标、显示文字、文字颜色以及大小-->
+        <attr name="rightIcon" format="reference" />
+        <!--文字-->
+        <attr name="rightText" format="reference|string" />
+        <!--文字颜色-->
+        <attr name="rightTextColor" format="reference|color" />
+        <!--文字大小,单位sp-->
+        <attr name="rightTextSize" format="integer" />
+    </declare-styleable>
+
+    <!--圆角Button自定义属性-->
+    <declare-styleable name="RoundButton">
+        <!--填充的背景颜色-->
+        <attr name="backgroundColorFill" format="reference|color" />
+        <!--圆角的x半径-->
+        <attr name="rx" format="dimension" />
+        <!--圆角的y半径-->
+        <attr name="ry" format="dimension" />
+        <!--描边颜色，默认不描边-->
+        <attr name="strokeColor" format="reference|color" />
+        <!--描边大小-->
+        <attr name="strokeWidth" format="dimension" />
+    </declare-styleable>
+
+</resources>

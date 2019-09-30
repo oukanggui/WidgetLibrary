@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp">
+
+    <com.baymax.widget.MenuLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftIcon="@mipmap/ic_launcher"
+        app:rightIcon="@mipmap/ic_more"
+        app:leftText="我是左边text"
+        app:rightText="我是右边text"
+        app:itemBackgroundColor="@color/colorAccent"/>
+    <com.baymax.widget.MenuLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftIcon="@mipmap/ic_launcher"
+        app:leftText="我是左边text"
+        app:rightText="我是右边text"
+        app:rightTextColor="@color/colorAccent"
+        app:leftTextColor="@color/colorPrimaryDark"/>
+    <com.baymax.widget.MenuLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftIcon="@mipmap/ic_launcher"
+        app:leftText="我是左边text"
+        app:rightText="我是右边text"
+        app:leftTextSize="18"
+        app:rightTextSize="14"/>
+
+    <com.baymax.widget.RoundButton
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="我是圆角控件"
+        android:textColor="@android:color/white"
+        app:backgroundColorFill="@color/colorAccent"
+        app:rx="5dp"
+        app:ry="5dp"/>
+
+    <com.baymax.widget.RoundButton
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="我是带边框圆角控件"
+        android:textColor="@android:color/white"
+        app:backgroundColorFill="@color/colorPrimaryDark"
+        app:strokeColor="@color/colorAccent"
+        app:strokeWidth="1dp"
+        app:rx="5dp"
+        app:ry="5dp"/>
+
+</LinearLayout>
