@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/expand_root_fl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/expand_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/expand_iv"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/splitter_more" />
+
+        <TextView
+            android:id="@+id/expand_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="展开"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/expand_helper_tv"
+            android:layout_width="0.5dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dp"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/expand_content_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        android:textSize="20dp" />
+
+</FrameLayout>

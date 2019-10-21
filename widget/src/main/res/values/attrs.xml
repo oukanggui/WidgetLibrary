@@ -38,4 +38,35 @@
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
 
+
+    <declare-styleable name="ExpandLayout">
+        <!--最小行数-->
+        <attr name="minLineNum" format="integer" />
+        <!--展开时对应的图片-->
+        <attr name="expandIconResId" format="reference" />
+        <!--不展开时对应的图片-->
+        <attr name="collapseIconResId" format="reference" />
+        <!--展开时对应末尾提示的文字-->
+        <attr name="expandMoreText" format="string" />
+        <!--不展开时对应末尾提示的文字-->
+        <attr name="collapseLessText" format="string" />
+        <!--内容文字的颜色-->
+        <attr name="contentTextColor" format="reference|color"/>
+        <!--更多或收起文字的颜色-->
+        <attr name="expandTextColor" format="reference|color" />
+        <!--文字大小，单位：dp-->
+        <attr name="contentTextSize" format="integer" />
+        <!--更多/收起文字大小，单位：dp-->
+        <attr name="expandTextSize" format="integer" />
+        <!--展开样式-->
+        <attr name="expandStyle" format="integer">
+            <!--默认样式：图标+文字-->
+            <enum name="DEFAULT" value="0" />
+            <enum name="ICON" value="1" />
+            <enum name="TEXT" value="2" />
+        </attr>
+
+    </declare-styleable>
+
+
 </resources>

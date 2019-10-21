@@ -57,4 +57,54 @@
         app:rx="5dp"
         app:ry="5dp"/>
 
+    <com.baymax.widget.ExpandLayout
+        android:id="@+id/my_expand_default"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        app:minLineNum = "2"
+        app:expandIconResId = "@drawable/splitter_more"
+        app:collapseIconResId = "@drawable/splitter_less"
+        app:expandMoreText = "更多"
+        app:collapseLessText = "收起"
+        app:contentTextSize="20"
+        app:expandTextSize="16"
+        app:expandTextColor="@color/colorPrimaryDark"/>
+
+    <com.baymax.widget.ExpandLayout
+        android:id="@+id/my_expand_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        app:minLineNum = "2"
+        app:expandIconResId = "@drawable/splitter_more"
+        app:collapseIconResId = "@drawable/splitter_less"
+        app:expandMoreText = "更多"
+        app:collapseLessText = "收起"
+        app:contentTextSize="20"
+        app:expandTextSize="15"
+        app:expandTextColor="@color/colorPrimaryDark"
+        app:expandStyle="ICON"/>
+
+    <com.baymax.widget.ExpandLayout
+        android:id="@+id/my_expand_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        app:minLineNum = "2"
+        app:expandIconResId = "@drawable/splitter_more"
+        app:collapseIconResId = "@drawable/splitter_less"
+        app:expandMoreText = "更多"
+        app:collapseLessText = "收起"
+        app:contentTextSize="20"
+        app:expandTextSize="18"
+        app:expandTextColor="@color/colorPrimaryDark"
+        app:expandStyle="TEXT"/>
+
 </LinearLayout>
