@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                 expandLayout.setExpandTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
             }
         });
-        String contentStr1 = "啊哈啊哈啊哈啊哈哈哈啊哈啊哈哈哈啊哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy";
+        String contentStr1 = "啊哈啊哈啊哈啊Android、\nAndroid、哈哈哈啊哈啊AndroidAndroid、哈哈Android、Android、哈啊哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy";
         expandLayoutIcon.setContent(contentStr1, new ExpandLayout.OnExpandStateChangeListener() {
             @Override
             public void onExpand() {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCollapse() {
-                expandLayoutIcon.setExpandMoreIcon(R.mipmap.ic_more);
+                expandLayoutIcon.setExpandMoreIcon(R.drawable.splitter_more);
             }
         });
         String contentStr2 = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy";

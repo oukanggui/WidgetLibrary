@@ -141,7 +141,7 @@ public class ExpandLayout extends RelativeLayout {
         mExpandPaint = new TextPaint();
         mExpandPaint.setTextSize(dp2px(mContext, mExpandTextSize));
 
-        mIconExpand.setBackgroundResource(mExpandIconResId);
+        setExpandMoreIcon(mExpandIconResId);
         mTvExpand.setText(mExpandMoreStr);
 
         mTvContent.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
@@ -300,9 +300,9 @@ public class ExpandLayout extends RelativeLayout {
     public void setExpandMoreIcon(int resId) {
         if (resId != 0) {
             mExpandIconResId = resId;
-            // 当前处于展开状态时，立即更新图标
-            if (mIsExpand) {
-                mIconExpand.setImageResource(resId);
+            // 当前处于收缩状态时，立即更新图标
+            if (!mIsExpand) {
+                mIconExpand.setBackgroundResource(resId);
             }
         }
     }
@@ -315,9 +315,9 @@ public class ExpandLayout extends RelativeLayout {
     public void setCollapseLessIcon(int resId) {
         if (resId != 0) {
             mCollapseIconResId = resId;
-            // 当前处于收缩状态时，立即更新图标
-            if (!mIsExpand) {
-                mIconExpand.setImageResource(resId);
+            // 当前处于展开状态时，立即更新图标
+            if (mIsExpand) {
+                mIconExpand.setBackgroundResource(resId);
             }
         }
     }
@@ -326,9 +326,9 @@ public class ExpandLayout extends RelativeLayout {
      * 展开
      */
     private void expand() {
-        mTvContent.setMaxLines(Integer.MAX_VALUE);
+        //mTvContent.setMaxLines(Integer.MAX_VALUE);
         mTvContent.setText(mOriginContentStr);
-        mIconExpand.setBackgroundResource(mCollapseIconResId);
+        setCollapseLessIcon(mCollapseIconResId);
         mTvExpand.setText(mCollapseLessStr);
     }
 
@@ -336,9 +336,9 @@ public class ExpandLayout extends RelativeLayout {
      * 收起
      */
     private void collapse() {
-        mTvContent.setMaxLines(mMinLineNum);
+        //mTvContent.setMaxLines(mMinLineNum);
         mTvContent.setText(mEllipsizeStr);
-        mIconExpand.setBackgroundResource(mExpandIconResId);
+        setExpandMoreIcon(mExpandIconResId);
         mTvExpand.setText(mExpandMoreStr);
     }
 
