@@ -38,7 +38,7 @@
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
 
-
+    <!--可展开布局自定义属性-->
     <declare-styleable name="ExpandLayout">
         <!--最小行数-->
         <attr name="minLineNum" format="integer" />
@@ -65,7 +65,32 @@
             <enum name="ICON" value="1" />
             <enum name="TEXT" value="2" />
         </attr>
+    </declare-styleable>
 
+    <!--带圆角指示器布局自定义属性-->
+    <declare-styleable name="ArrowRelativeLayout">
+        <!--三角形高度-->
+        <attr name="arrow_height" format="dimension"/>
+        <!--三角形宽度-->
+        <attr name="arrow_width" format="dimension"/>
+        <!--三角形距离布局左边的偏移量，默认居中显示-->
+        <attr name="arrow_offset" format="dimension"/>
+        <!--三角形的指示方向，向左、居中(默认)、向右-->
+        <attr name="arrow_direction" format="integer">
+            <enum name="middle" value="0" />
+            <enum name="left" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <!--三角形的位置，目前支持在布局上方、在布局下方，默认在上方-->
+        <attr name="arrow_position" format="integer">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+        </attr>
+        <!--背景填充颜色-->
+        <attr name="background_color" format="color"/>
+        <!--圆角的x,y半径值-->
+        <attr name="radiu_x" format="dimension"/>
+        <attr name="radiu_y" format="dimension"/>
     </declare-styleable>
 
 
