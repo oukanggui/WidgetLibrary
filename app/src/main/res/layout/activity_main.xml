@@ -111,6 +111,7 @@
             app:expandStyle="TEXT"/>
 
         <com.baymax.widget.ArrowRelativeLayout
+            android:id="@+id/layout_arrow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -118,12 +119,16 @@
             android:layout_marginRight="20dp"
             app:arrow_height="10dp"
             app:arrow_width="15dp"
-            app:arrow_direction="left">
+            app:radiu_x="5dp"
+            app:radiu_y="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp">
             <TextView
                 android:id="@+id/arrow1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
                 android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
             <TextView
                 android:id="@+id/arrow2"
@@ -132,6 +137,19 @@
                 android:text="YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
                 android:layout_below="@id/arrow1"/>
         </com.baymax.widget.ArrowRelativeLayout>
+
+        <com.baymax.widget.RoundButton
+            android:id="@+id/btn_change_background"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="更换背景颜色"
+            android:textColor="@android:color/white"
+            app:backgroundColorFill="@color/colorAccent"
+            app:rx="5dp"
+            app:ry="5dp"/>
 
         <com.baymax.widget.ArrowTextView
             android:id="@+id/tv_arrowText"

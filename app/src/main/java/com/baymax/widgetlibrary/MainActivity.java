@@ -3,9 +3,12 @@ package com.baymax.widgetlibrary;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
+import com.baymax.widget.ArrowRelativeLayout;
 import com.baymax.widget.ExpandLayout;
 
 /**
@@ -56,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCollapse() {
                 Toast.makeText(MainActivity.this, "onCollapse", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        final ArrowRelativeLayout arrowRelativeLayout = findViewById(R.id.layout_arrow);
+        findViewById(R.id.btn_change_background).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                arrowRelativeLayout.setFillBackgroundColor(Color.RED);
             }
         });
     }
