@@ -19,9 +19,6 @@ import android.widget.RelativeLayout;
 public class ArrowRelativeLayout extends RelativeLayout {
     public static final int POSTION_TOP = 0;
     public static final int POSTION_BOTTOM = 1;
-    public static final int DIRECTION_MIDDLE = 0;
-    public static final int DIRECTION_LEFT = 1;
-    public static final int DIRECTION_RIGHT = 2;
 
     /**
      * 三角形的宽度
@@ -32,13 +29,13 @@ public class ArrowRelativeLayout extends RelativeLayout {
      */
     private float mArrowHeight = 20;
     /**
-     * 三角形距离布局左边的偏移量，默认居中显示
+     * 三角形左边底点距离布局左边的偏移量，默认居中显示
      */
-    private float mArrowOffset = -1;
+    private float mArrowStartOffset = -1;
     /**
-     * 三角形的指示方向，向左、居中(默认)、向右
+     * 三角形顶点与三角形底边中心的水平偏移量,负值代表箭头往左偏，正值代表箭头往右偏，默认居中
      */
-    private int mArrowDirection = DIRECTION_MIDDLE;
+    private float mArrowVertexOffset = 0;
     /**
      * 三角形的位置，目前支持在布局上方、在布局下方，默认在上方
      */
@@ -114,8 +111,8 @@ public class ArrowRelativeLayout extends RelativeLayout {
         if (ta != null) {
             mArrowWidth = ta.getDimension(R.styleable.ArrowRelativeLayout_arrow_width, 20);
             mArrowHeight = ta.getDimension(R.styleable.ArrowRelativeLayout_arrow_height, 20);
-            mArrowOffset = ta.getDimension(R.styleable.ArrowRelativeLayout_arrow_offset, -1);
-            mArrowDirection = ta.getInt(R.styleable.ArrowRelativeLayout_arrow_direction, DIRECTION_MIDDLE);
+            mArrowStartOffset = ta.getDimension(R.styleable.ArrowRelativeLayout_arrow_start_offset, -1);
+            mArrowVertexOffset = ta.getDimension(R.styleable.ArrowRelativeLayout_arrow_vertex_offset, 0);
             mArrowPosition = ta.getInt(R.styleable.ArrowRelativeLayout_arrow_position, POSTION_TOP);
             mRadiuX = ta.getDimension(R.styleable.ArrowRelativeLayout_radiu_x, 0);
             mRadiuY = ta.getDimension(R.styleable.ArrowRelativeLayout_radiu_y, 0);
@@ -168,37 +165,23 @@ public class ArrowRelativeLayout extends RelativeLayout {
     private void drawArrowArea(Canvas canvas, int width, int height) {
         Path path = new Path();
         // 根据三角箭头箭头方向和位置决定三角形三点的坐标
-        if (mArrowOffset < 0) {
-            mArrowOffset = width / 2.0f - mArrowWidth / 2.0f;
+        if (mArrowStartOffset < 0) {
+            mArrowStartOffset = width / 2.0f - mArrowWidth / 2.0f;
         }
-        if ((mArrowOffset + mArrowWidth) > width) {
-            mArrowOffset = width - mArrowWidth;
+        if ((mArrowStartOffset + mArrowWidth) > width) {
+            mArrowStartOffset = width - mArrowWidth;
         }
-        float topPointX;
-        float topPointY;
-        float leftPointX = mArrowOffset;
+        // 三角形左边点坐标
+        float leftPointX = mArrowStartOffset;
+        float leftPointY = mArrowHeight;
+        // 顶点
+        float topPointX = leftPointX + mArrowWidth / 2 + mArrowVertexOffset;
+        float topPointY = 0;
+        // 三角形右边点坐标
         float rightPointX = leftPointX + mArrowWidth;
-        float leftPointY;
-        float rightPointY;
-        // 根据箭头方向确定三角形顶点的x坐标
-        switch (mArrowDirection) {
-            case DIRECTION_LEFT:
-                topPointX = leftPointX - mArrowHeight;
-                break;
-            case DIRECTION_RIGHT:
-                topPointX = rightPointX + mArrowHeight;
-                break;
-            case DIRECTION_MIDDLE:
-            default:
-                topPointX = leftPointX + mArrowWidth / 2;
-                break;
-        }
-        // 根据三角形的位置，确定三角形三点的y坐标
-        if (mArrowPosition == POSTION_TOP) {
-            // 三角形在上方
-            topPointY = 0;
-            leftPointY = rightPointY = mArrowHeight;
-        } else {
+        float rightPointY = mArrowHeight;
+        // 根据三角形的位置，确定三角形三点的y坐标，默认在上方
+        if (mArrowPosition == POSTION_BOTTOM) {
             topPointY = height;
             leftPointY = rightPointY = height - mArrowHeight;
         }

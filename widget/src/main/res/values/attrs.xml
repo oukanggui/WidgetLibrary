@@ -73,14 +73,10 @@
         <attr name="arrow_height" format="dimension"/>
         <!--三角形宽度-->
         <attr name="arrow_width" format="dimension"/>
-        <!--三角形距离布局左边的偏移量，默认居中显示-->
-        <attr name="arrow_offset" format="dimension"/>
-        <!--三角形的指示方向，向左、居中(默认)、向右-->
-        <attr name="arrow_direction" format="integer">
-            <enum name="middle" value="0" />
-            <enum name="left" value="1" />
-            <enum name="right" value="2" />
-        </attr>
+        <!--三角形左边点距离布局左边的水平偏移量，默认居中显示-->
+        <attr name="arrow_start_offset" format="dimension"/>
+        <!--三角形顶点与三角形底边中心的水平偏移量,负值代表往左偏，正值代表往右偏，默认居中-->
+        <attr name="arrow_vertex_offset" format="dimension"/>
         <!--三角形的位置，目前支持在布局上方、在布局下方，默认在上方-->
         <attr name="arrow_position" format="integer">
             <enum name="top" value="0" />
