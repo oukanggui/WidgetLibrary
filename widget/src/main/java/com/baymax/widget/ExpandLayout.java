@@ -33,6 +33,7 @@ public class ExpandLayout extends RelativeLayout {
     private LinearLayout mLayoutExpandMore;
     private ImageView mIconExpand;
     private TextView mTvExpand;
+    private int mMeasuredWidth;
     /**
      * 辅助TextView，保证末尾图标和文字与内容文字居中显示
      */
@@ -209,20 +210,25 @@ public class ExpandLayout extends RelativeLayout {
         }
         mOriginContentStr = contentStr;
         mOnExpandStateChangeListener = onExpandStateChangeListener;
-        // 获取文字的宽度
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // 用完后立即移除监听，防止多次回调的问题
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                } else {
-                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
+        if (mMeasuredWidth <= 0) {
+            // 获取文字的宽度
+            getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    // 用完后立即移除监听，防止多次回调的问题
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                    mMeasuredWidth = getMeasuredWidth();
+                    Log.d(TAG, "onGlobalLayout,控件宽度 = " + getMeasuredWidth());
+                    measureEllipsizeText(mMeasuredWidth);
                 }
-                Log.d(TAG, "onGlobalLayout,控件宽度 = " + getMeasuredWidth());
-                measureEllipsizeText(getMeasuredWidth());
-            }
-        });
+            });
+        } else {
+            measureEllipsizeText(mMeasuredWidth);
+        }
     }
 
     /**
