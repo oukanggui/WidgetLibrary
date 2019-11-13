@@ -271,8 +271,12 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
                 //换行展示“收起”按钮及文字
                 mOriginContentStr += "\n";
             }
-            // 默认收缩
-            collapse();
+            if (mIsExpand) {
+                expand();
+            } else {
+                // 默认收缩
+                collapse();
+            }
         }
     }
 
@@ -330,6 +334,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
      * 展开
      */
     private void expand() {
+        setIsExpand(true);
         mTvContent.setMaxLines(Integer.MAX_VALUE);
         mTvContent.setText(mOriginContentStr);
         setCollapseLessIcon(mCollapseIconResId);
@@ -340,10 +345,15 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
      * 收起
      */
     private void collapse() {
+        setIsExpand(false);
         mTvContent.setMaxLines(Integer.MAX_VALUE);
         mTvContent.setText(mEllipsizeStr);
         setExpandMoreIcon(mExpandIconResId);
         mTvExpand.setText(mExpandMoreStr);
+    }
+
+    public void setIsExpand(boolean isExpand) {
+        mIsExpand = isExpand;
     }
 
     private int dp2px(Context context, float dpValue) {
