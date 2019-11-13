@@ -151,14 +151,5 @@
             app:rx="5dp"
             app:ry="5dp"/>
 
-        <com.baymax.widget.ArrowTextView
-            android:id="@+id/tv_arrowText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="你好Android，你好Android！你好Android？你好Android！！你好Android！！！！你好Android##￥￥%%……#@￥#￥%"
-            android:layout_marginTop="20dp"
-            android:textColor="@android:color/white"
-            android:padding="20dp"/>
-
     </LinearLayout>
 </ScrollView>
