@@ -22,7 +22,7 @@ import android.widget.TextView;
  * 描述：展开和收起布局，在TextView最后一行添加“图片+文字样式”展开和收起布局，而且是右对齐
  * 优化改造于：https://blog.csdn.net/u014620028/article/details/100145527
  */
-public class ExpandLayout extends RelativeLayout {
+public class ExpandLayout extends RelativeLayout implements View.OnClickListener {
     private static final String TAG = ExpandLayout.class.getSimpleName();
     private static final int STYLE_DEFAULT = 0;
     private static final int STYLE_ICON = 1;
@@ -167,26 +167,16 @@ public class ExpandLayout extends RelativeLayout {
                 break;
         }
 
-        mRootView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIsExpand = !mIsExpand;
-                if (mIsExpand) {
-                    //展开
-                    expand();
-                    if (mOnExpandStateChangeListener != null) {
-                        mOnExpandStateChangeListener.onExpand();
-                    }
-                } else {
-                    //收缩
-                    collapse();
-                    if (mOnExpandStateChangeListener != null) {
-                        mOnExpandStateChangeListener.onCollapse();
-                    }
-                }
+    }
 
-            }
-        });
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Log.d(TAG, "onMeasure,measureWidth = " + getMeasuredWidth());
+        if (mMeasuredWidth <= 0 && getMeasuredWidth() > 0) {
+            mMeasuredWidth = getMeasuredWidth();
+            measureEllipsizeText(mMeasuredWidth);
+        }
     }
 
     /**
@@ -205,11 +195,15 @@ public class ExpandLayout extends RelativeLayout {
      * @param onExpandStateChangeListener 状态回调监听器
      */
     public void setContent(String contentStr, final OnExpandStateChangeListener onExpandStateChangeListener) {
-        if (TextUtils.isEmpty(contentStr)) {
+        if (TextUtils.isEmpty(contentStr) || mRootView == null) {
             return;
         }
         mOriginContentStr = contentStr;
         mOnExpandStateChangeListener = onExpandStateChangeListener;
+        // 此处需要先设置mTvContent的text属性，防止在列表中，由于没有获取到控件宽度mMeasuredWidth，先执行onMeasure方法测量时，导致文本只能显示一行的问题
+        // 提前设置好text，再执行onMeasure，则没有该问题
+        mTvContent.setMaxLines(mMinLineNum);
+        mTvContent.setText(mOriginContentStr);
         if (mMeasuredWidth <= 0) {
             // 获取文字的宽度
             getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -237,7 +231,9 @@ public class ExpandLayout extends RelativeLayout {
      * @param lineWidth
      */
     private void measureEllipsizeText(int lineWidth) {
-
+        if (TextUtils.isEmpty(mOriginContentStr)) {
+            return;
+        }
         int oneLineWidth = lineWidth;
         //全部文字的宽度
         float textLength = mTextPaint.measureText(mOriginContentStr);
@@ -248,9 +244,11 @@ public class ExpandLayout extends RelativeLayout {
         if (lineNum <= mMinLineNum) {
             //少于最小展示行数，不再展示更多相关布局
             mLayoutExpandMore.setVisibility(View.GONE);
-            mTvContent.setVisibility(View.VISIBLE);
+            mTvContent.setMaxLines(Integer.MAX_VALUE);
             mTvContent.setText(mOriginContentStr);
         } else {
+            mRootView.setOnClickListener(this);
+            mLayoutExpandMore.setVisibility(View.VISIBLE);
             //多余最小展示行数，需要做特殊处理
             int iconWidth = 0;
             if (mExpandStyle == STYLE_DEFAULT || mExpandStyle == STYLE_ICON) {
@@ -332,7 +330,7 @@ public class ExpandLayout extends RelativeLayout {
      * 展开
      */
     private void expand() {
-        //mTvContent.setMaxLines(Integer.MAX_VALUE);
+        mTvContent.setMaxLines(Integer.MAX_VALUE);
         mTvContent.setText(mOriginContentStr);
         setCollapseLessIcon(mCollapseIconResId);
         mTvExpand.setText(mCollapseLessStr);
@@ -342,7 +340,7 @@ public class ExpandLayout extends RelativeLayout {
      * 收起
      */
     private void collapse() {
-        //mTvContent.setMaxLines(mMinLineNum);
+        mTvContent.setMaxLines(Integer.MAX_VALUE);
         mTvContent.setText(mEllipsizeStr);
         setExpandMoreIcon(mExpandIconResId);
         mTvExpand.setText(mExpandMoreStr);
@@ -351,5 +349,22 @@ public class ExpandLayout extends RelativeLayout {
     private int dp2px(Context context, float dpValue) {
         final float densityScale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * densityScale + 0.5f);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (!mIsExpand) {
+            //之前是收缩状态，点击后展开
+            expand();
+            if (mOnExpandStateChangeListener != null) {
+                mOnExpandStateChangeListener.onExpand();
+            }
+        } else {
+            //之前是展开状态，点击后收缩
+            collapse();
+            if (mOnExpandStateChangeListener != null) {
+                mOnExpandStateChangeListener.onCollapse();
+            }
+        }
     }
 }
