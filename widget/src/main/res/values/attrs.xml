@@ -40,8 +40,8 @@
 
     <!--可展开布局自定义属性-->
     <declare-styleable name="ExpandLayout">
-        <!--最小行数-->
-        <attr name="minLineNum" format="integer" />
+        <!--最大缩略行数-->
+        <attr name="maxLine" format="integer" />
         <!--展开时对应的图片-->
         <attr name="expandIconResId" format="reference" />
         <!--不展开时对应的图片-->

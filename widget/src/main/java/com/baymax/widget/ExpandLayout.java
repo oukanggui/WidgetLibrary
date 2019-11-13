@@ -47,7 +47,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
     private String mExpandMoreStr;
     private String mCollapseLessStr;
 
-    private static int mMinLineNum = 2;
+    private static int mMaxLine = 2;
 
     private int mContentTextSize;
     private int mExpandTextSize;
@@ -111,7 +111,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         mContext = context;
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ExpandLayout);
         if (ta != null) {
-            mMinLineNum = ta.getInt(R.styleable.ExpandLayout_minLineNum, 2);
+            mMaxLine = ta.getInt(R.styleable.ExpandLayout_maxLine, 2);
             mExpandIconResId = ta.getResourceId(R.styleable.ExpandLayout_expandIconResId, 0);
             mCollapseIconResId = ta.getResourceId(R.styleable.ExpandLayout_collapseIconResId, 0);
             mExpandMoreStr = ta.getString(R.styleable.ExpandLayout_expandMoreText);
@@ -194,7 +194,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         mOnExpandStateChangeListener = onExpandStateChangeListener;
         // 此处需要先设置mTvContent的text属性，防止在列表中，由于没有获取到控件宽度mMeasuredWidth，先执行onMeasure方法测量时，导致文本只能显示一行的问题
         // 提前设置好text，再执行onMeasure，则没有该问题
-        mTvContent.setMaxLines(mMinLineNum);
+        mTvContent.setMaxLines(mMaxLine);
         mTvContent.setText(mOriginContentStr);
         if (mMeasuredWidth <= 0) {
             // 获取文字的宽度
@@ -238,7 +238,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         TextPaint textPaint = mTvContent.getPaint();
         StaticLayout staticLayout = new StaticLayout(mOriginContentStr, textPaint, lineWidth, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
         int lineCount = staticLayout.getLineCount();
-        if (lineCount <= mMinLineNum) {
+        if (lineCount <= mMaxLine) {
             // 不足最大行数，直接设置文本
             //少于最小展示行数，不再展示更多相关布局
             mEllipsizeStr = mOriginContentStr;
@@ -274,8 +274,8 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         }
         TextPaint textPaint = mTvContent.getPaint();
         // 获取到第mMinLineNum行的起始和结束位置
-        int startPos = staticLayout.getLineStart(mMinLineNum - 1);
-        int endPos = staticLayout.getLineEnd(mMinLineNum - 1);
+        int startPos = staticLayout.getLineStart(mMaxLine - 1);
+        int endPos = staticLayout.getLineEnd(mMaxLine - 1);
         Log.d(TAG, "startPos = " + startPos);
         Log.d(TAG, "endPos = " + endPos);
         // 修正，防止取子串越界
@@ -293,13 +293,13 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         if (lineContent != null) {
             textLength = textPaint.measureText(lineContent);
         }
-        Log.d(TAG, "第" + mMinLineNum + "行 = " + lineContent);
-        Log.d(TAG, "第" + mMinLineNum + "行 文本长度 = " + textLength);
+        Log.d(TAG, "第" + mMaxLine + "行 = " + lineContent);
+        Log.d(TAG, "第" + mMaxLine + "行 文本长度 = " + textLength);
 
         // 预留宽度："..." + 展开布局与文本间距 +图标长度 + 展开文本长度
         String strEllipsizeMark = "...";
         // 展开控件需要预留的长度
-        float reservedWidth = textPaint.measureText(strEllipsizeMark) + getExpandLayoutReservedWidth() + dp2px(mContext, 10);
+        float reservedWidth = textPaint.measureText(strEllipsizeMark) + dp2px(mContext, 20) + getExpandLayoutReservedWidth();
         Log.d(TAG, "需要预留的长度 = " + reservedWidth);
         if (reservedWidth + textLength <= lineWidth) {
             // 足够空间展示
@@ -307,7 +307,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         } else {
             // 空间不够，需要截取最后一行的字符串
             float exceedSpace = reservedWidth + textLength - lineWidth;
-            int correctEndPos = endPos - (int) ((exceedSpace / textLength) * 1.0f * endPos);
+            int correctEndPos = endPos - (int) ((exceedSpace / textLength) * 1.0f * (endPos - startPos));
             Log.d(TAG, "correctEndPos = " + correctEndPos);
             mEllipsizeStr = removeEndLineBreak(mOriginContentStr.substring(0, correctEndPos)) + strEllipsizeMark;
         }
