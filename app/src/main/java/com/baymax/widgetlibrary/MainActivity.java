@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 expandLayout.setExpandTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_dark));
             }
         });
-        String contentStr1 = "啊哈啊哈啊哈啊Android、\nAndroid、哈哈哈啊哈啊AndroidAndroid、哈哈Android、Android、哈啊哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或";
+        String contentStr1 = "啊哈啊哈啊哈啊 Android、\n\n\nAndroid、哈哈哈啊哈啊AndroidAndroid、哈哈Android、Android、哈啊哈啊哈哈哈哈 哈哈哈哈哈哈哈哈哈哈哈或   或或或或或或或或或 或或或或或或或或或或   或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或";
         expandLayoutIcon.setContent(contentStr1, new ExpandLayout.OnExpandStateChangeListener() {
             @Override
             public void onExpand() {

@@ -3,6 +3,8 @@ package com.baymax.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.text.Layout;
+import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -49,9 +51,6 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
 
     private int mContentTextSize;
     private int mExpandTextSize;
-
-    private TextPaint mTextPaint;
-    private TextPaint mExpandPaint;
 
     /**
      * 是否展开
@@ -136,15 +135,8 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         mTvExpandHelper = mRootView.findViewById(R.id.expand_helper_tv);
 
         int textSize = dp2px(mContext, mContentTextSize);
-        //初始化画笔，用于后续文字测量使用
-        mTextPaint = new TextPaint();
-        mTextPaint.setTextSize(textSize);
-        mExpandPaint = new TextPaint();
-        mExpandPaint.setTextSize(dp2px(mContext, mExpandTextSize));
-
         setExpandMoreIcon(mExpandIconResId);
         mTvExpand.setText(mExpandMoreStr);
-
         mTvContent.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         // 辅助TextView，与内容TextView大小相等，保证末尾图标和文字与内容文字居中显示
         mTvExpandHelper.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
@@ -234,43 +226,33 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         if (TextUtils.isEmpty(mOriginContentStr)) {
             return;
         }
-        int oneLineWidth = lineWidth;
-        //全部文字的宽度
-        float textLength = mTextPaint.measureText(mOriginContentStr);
+        handleMeasureEllipsizeText(lineWidth);
+    }
 
-        //行数
-        int lineNum = (int) Math.ceil(textLength / oneLineWidth);
-
-        if (lineNum <= mMinLineNum) {
+    /**
+     * 使用StaticLayout处理文本分行和布局
+     *
+     * @param lineWidth 文本(布局)宽度
+     */
+    private void handleMeasureEllipsizeText(int lineWidth) {
+        TextPaint textPaint = mTvContent.getPaint();
+        StaticLayout staticLayout = new StaticLayout(mOriginContentStr, textPaint, lineWidth, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+        int lineCount = staticLayout.getLineCount();
+        if (lineCount <= mMinLineNum) {
+            // 不足最大行数，直接设置文本
             //少于最小展示行数，不再展示更多相关布局
+            mEllipsizeStr = mOriginContentStr;
             mLayoutExpandMore.setVisibility(View.GONE);
             mTvContent.setMaxLines(Integer.MAX_VALUE);
             mTvContent.setText(mOriginContentStr);
         } else {
+            // 超出最大行数
             mRootView.setOnClickListener(this);
             mLayoutExpandMore.setVisibility(View.VISIBLE);
-            //多余最小展示行数，需要做特殊处理
-            int iconWidth = 0;
-            if (mExpandStyle == STYLE_DEFAULT || mExpandStyle == STYLE_ICON) {
-                // ll布局中的内容，图标iv的宽是15dp，参考布局
-                iconWidth = dp2px(mContext, 15);
-            }
-            float textWidth = 0f;
-            if (mExpandStyle == STYLE_DEFAULT || mExpandStyle == STYLE_TEXT) {
-                textWidth = mExpandPaint.measureText(mExpandMoreStr);
-            }
-
-            float llWidth = iconWidth + textWidth;
-
-            // 这里最后减去的5dp，是为了文字和"展示"分开，可以根据根据实际应用效果调整此值
-            float availableTextWidth = oneLineWidth * mMinLineNum - llWidth - dp2px(mContext, 5);
-            mEllipsizeStr = TextUtils.ellipsize(mOriginContentStr, mTextPaint, availableTextWidth, TextUtils.TruncateAt.END);
-
-            if (textLength + llWidth > oneLineWidth * lineNum) {
-                //文字宽度+展开布局的宽度 > 一行最大展示宽度*行数
-                //换行展示“收起”按钮及文字
-                mOriginContentStr += "\n";
-            }
+            // Step1:第mMinLineNum行的处理
+            handleEllipsizeString(staticLayout, lineWidth);
+            // Step2:最后一行的处理
+            handleLastLine(staticLayout, lineWidth);
             if (mIsExpand) {
                 expand();
             } else {
@@ -278,6 +260,134 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
                 collapse();
             }
         }
+    }
+
+    /**
+     * 处理缩略的字符串
+     *
+     * @param staticLayout
+     * @param lineWidth
+     */
+    private void handleEllipsizeString(StaticLayout staticLayout, int lineWidth) {
+        if (staticLayout == null) {
+            return;
+        }
+        TextPaint textPaint = mTvContent.getPaint();
+        // 获取到第mMinLineNum行的起始和结束位置
+        int startPos = staticLayout.getLineStart(mMinLineNum - 1);
+        int endPos = staticLayout.getLineEnd(mMinLineNum - 1);
+        Log.d(TAG, "startPos = " + startPos);
+        Log.d(TAG, "endPos = " + endPos);
+        // 修正，防止取子串越界
+        if (startPos < 0) {
+            startPos = 0;
+        }
+        if (endPos > mOriginContentStr.length()) {
+            endPos = mOriginContentStr.length();
+        }
+        if (startPos > endPos) {
+            startPos = endPos;
+        }
+        String lineContent = mOriginContentStr.substring(startPos, endPos);
+        float textLength = 0f;
+        if (lineContent != null) {
+            textLength = textPaint.measureText(lineContent);
+        }
+        Log.d(TAG, "第" + mMinLineNum + "行 = " + lineContent);
+        Log.d(TAG, "第" + mMinLineNum + "行 文本长度 = " + textLength);
+
+        // 预留宽度："..." + 展开布局与文本间距 +图标长度 + 展开文本长度
+        String strEllipsizeMark = "...";
+        // 展开控件需要预留的长度
+        float reservedWidth = textPaint.measureText(strEllipsizeMark) + getExpandLayoutReservedWidth() + dp2px(mContext, 10);
+        Log.d(TAG, "需要预留的长度 = " + reservedWidth);
+        if (reservedWidth + textLength <= lineWidth) {
+            // 足够空间展示
+            mEllipsizeStr = removeEndLineBreak(mOriginContentStr.substring(0, endPos)) + strEllipsizeMark;
+        } else {
+            // 空间不够，需要截取最后一行的字符串
+            float exceedSpace = reservedWidth + textLength - lineWidth;
+            int correctEndPos = endPos - (int) ((exceedSpace / textLength) * 1.0f * endPos);
+            Log.d(TAG, "correctEndPos = " + correctEndPos);
+            mEllipsizeStr = removeEndLineBreak(mOriginContentStr.substring(0, correctEndPos)) + strEllipsizeMark;
+        }
+    }
+
+    /**
+     * 处理最后一行文本
+     *
+     * @param staticLayout
+     * @param lineWidth
+     */
+    private void handleLastLine(StaticLayout staticLayout, int lineWidth) {
+        if (staticLayout == null) {
+            return;
+        }
+        int lineCount = staticLayout.getLineCount();
+        int startPos = staticLayout.getLineStart(lineCount - 1);
+        int endPos = staticLayout.getLineEnd(lineCount - 1);
+        Log.d(TAG, "最后一行 startPos = " + startPos);
+        Log.d(TAG, "最后一行 endPos = " + endPos);
+        // 修正，防止取子串越界
+        if (startPos < 0) {
+            startPos = 0;
+        }
+        if (endPos > mOriginContentStr.length()) {
+            endPos = mOriginContentStr.length();
+        }
+        if (startPos > endPos) {
+            startPos = endPos;
+        }
+        String lastLineContent = mOriginContentStr.substring(startPos, endPos);
+        Log.d(TAG, "最后一行 内容 = " + lastLineContent);
+        float textLength = 0f;
+        TextPaint textPaint = mTvContent.getPaint();
+        if (lastLineContent != null) {
+            textLength = textPaint.measureText(lastLineContent);
+        }
+        Log.d(TAG, "最后一行 文本长度 = " + textLength);
+        float reservedWidth = getExpandLayoutReservedWidth();
+        if (textLength + reservedWidth > lineWidth) {
+            //文字宽度+展开布局的宽度 > 一行最大展示宽度
+            //换行展示“收起”按钮及文字
+            mOriginContentStr += "\n";
+        }
+    }
+
+    /**
+     * 获取展开布局的展开收缩控件的预留宽度
+     *
+     * @return value = 图标长度 + 展开提示文本长度
+     */
+    private float getExpandLayoutReservedWidth() {
+        int iconWidth = 0;
+        if (mExpandStyle == STYLE_DEFAULT || mExpandStyle == STYLE_ICON) {
+            // ll布局中的内容，图标iv的宽是15dp，参考布局
+            iconWidth = dp2px(mContext, 15);
+        }
+        float textWidth = 0f;
+        if (mExpandStyle == STYLE_DEFAULT || mExpandStyle == STYLE_TEXT) {
+            textWidth = mTvExpand.getPaint().measureText(mExpandMoreStr);
+        }
+        // 展开控件需要预留的长度
+        return iconWidth + textWidth;
+    }
+
+    /**
+     * 清除行末换行符
+     *
+     * @param text
+     * @return
+     */
+    private String removeEndLineBreak(CharSequence text) {
+        if (text == null) {
+            return null;
+        }
+        String str = text.toString();
+        if (str.endsWith("\n")) {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
     }
 
     /**
