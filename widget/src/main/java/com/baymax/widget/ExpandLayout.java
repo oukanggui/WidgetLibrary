@@ -172,11 +172,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         mTvExpand = findViewById(R.id.expand_tv);
         mTvExpandHelper = findViewById(R.id.expand_helper_tv);
 
-        if (mExpandIconResId != 0) {
-            mIconExpand.setImageResource(mExpandIconResId);
-        }
         mTvExpand.setText(mExpandMoreStr);
-
         mTvContent.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContentTextSize);
         // 辅助TextView，与内容TextView大小相等，保证末尾图标和文字与内容文字居中显示
         mTvExpandHelper.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContentTextSize);
@@ -184,7 +180,8 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         mTvContent.setLineSpacing(mLineSpacingExtra, mLineSpacingMultiplier);
         mTvExpandHelper.setLineSpacing(mLineSpacingExtra, mLineSpacingMultiplier);
         mTvExpand.setLineSpacing(mLineSpacingExtra, mLineSpacingMultiplier);
-
+        //默认设置展开图标
+        setExpandMoreIcon(mExpandIconResId);
         setContentTextColor(mContentTextColor);
         setExpandTextColor(mExpandTextColor);
         switch (mExpandStyle) {
