@@ -67,13 +67,13 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
-            app:maxLine="2"
+            app:maxLines="2"
             app:expandIconResId = "@drawable/splitter_more"
             app:collapseIconResId = "@drawable/splitter_less"
             app:expandMoreText = "更多"
             app:collapseLessText = "收起"
-            app:contentTextSize="20"
-            app:expandTextSize="16"
+            app:contentTextSize="20sp"
+            app:expandTextSize="16sp"
             app:expandTextColor="@color/colorPrimaryDark"/>
 
         <com.baymax.widget.ExpandLayout
@@ -83,13 +83,13 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
-            app:maxLine="2"
+            app:maxLines="2"
             app:expandIconResId = "@drawable/splitter_more"
             app:collapseIconResId = "@drawable/splitter_less"
             app:expandMoreText = "更多"
             app:collapseLessText = "收起"
-            app:contentTextSize="20"
-            app:expandTextSize="15"
+            app:contentTextSize="20sp"
+            app:expandTextSize="15sp"
             app:expandTextColor="@color/colorPrimaryDark"
             app:expandStyle="ICON"/>
 
@@ -100,13 +100,13 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
-            app:maxLine="2"
+            app:maxLines="2"
             app:expandIconResId = "@drawable/splitter_more"
             app:collapseIconResId = "@drawable/splitter_less"
             app:expandMoreText = "更多"
             app:collapseLessText = "收起"
-            app:contentTextSize="20"
-            app:expandTextSize="18"
+            app:contentTextSize="20sp"
+            app:expandTextSize="18sp"
             app:expandTextColor="@color/colorPrimaryDark"
             app:expandStyle="TEXT"/>
 

@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -47,7 +46,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
     private String mExpandMoreStr;
     private String mCollapseLessStr;
 
-    private static int mMaxLine = 2;
+    private int mMaxLines = 2;
 
     private int mContentTextSize;
     private int mExpandTextSize;
@@ -80,6 +79,27 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
      */
     private int mExpandStyle = STYLE_DEFAULT;
 
+    /**
+     * 展开/收缩布局对应图标的宽度,默认布局是15dp
+     */
+    private int mExpandIconWidth = 15;
+
+    /**
+     * 缩略文本展示时与展开/搜索布局的间距,默认是20dp
+     */
+    private int mSpaceMargin = 20;
+
+    /**
+     * 文本显示的lineSpacingExtra，对应于TextView的lineSpacingExtra属性
+     */
+    private float mLineSpacingExtra = 0.0f;
+
+    /**
+     * 文本显示的lineSpacingMultiplier，对应于TextView的lineSpacingMultiplier属性
+     */
+    private float mLineSpacingMultiplier = 1.0f;
+
+
     private OnExpandStateChangeListener mOnExpandStateChangeListener;
 
     /**
@@ -111,36 +131,59 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         mContext = context;
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ExpandLayout);
         if (ta != null) {
-            mMaxLine = ta.getInt(R.styleable.ExpandLayout_maxLine, 2);
+            mMaxLines = ta.getInt(R.styleable.ExpandLayout_maxLines, 2);
             mExpandIconResId = ta.getResourceId(R.styleable.ExpandLayout_expandIconResId, 0);
             mCollapseIconResId = ta.getResourceId(R.styleable.ExpandLayout_collapseIconResId, 0);
             mExpandMoreStr = ta.getString(R.styleable.ExpandLayout_expandMoreText);
             mCollapseLessStr = ta.getString(R.styleable.ExpandLayout_collapseLessText);
-            mContentTextSize = ta.getInt(R.styleable.ExpandLayout_contentTextSize, 18);
+            mContentTextSize = ta.getDimensionPixelSize(R.styleable.ExpandLayout_contentTextSize, sp2px(context, 14));
             mContentTextColor = ta.getColor(R.styleable.ExpandLayout_contentTextColor, 0);
-            mExpandTextSize = ta.getInt(R.styleable.ExpandLayout_expandTextSize, 18);
+            mExpandTextSize = ta.getDimensionPixelSize(R.styleable.ExpandLayout_expandTextSize, sp2px(context, 14));
             mExpandTextColor = ta.getColor(R.styleable.ExpandLayout_expandTextColor, 0);
             mExpandStyle = ta.getInt(R.styleable.ExpandLayout_expandStyle, STYLE_DEFAULT);
+            mExpandIconWidth = ta.getDimensionPixelSize(R.styleable.ExpandLayout_expandIconWidth, dp2px(context, 15));
+            mSpaceMargin = ta.getDimensionPixelSize(R.styleable.ExpandLayout_spaceMargin, dp2px(context, 20));
+            mLineSpacingExtra = ta.getDimensionPixelSize(R.styleable.ExpandLayout_lineSpacingExtra, 0);
+            mLineSpacingMultiplier = ta.getFloat(R.styleable.ExpandLayout_lineSpacingMultiplier, 1.0f);
             ta.recycle();
+        }
+        // mMaxLines应该保证大于等于1
+        if (mMaxLines < 1) {
+            mMaxLines = 1;
         }
         initView();
     }
 
-    private void initView() {
-        mRootView = LayoutInflater.from(mContext).inflate(R.layout.layout_expand, this);
-        mTvContent = mRootView.findViewById(R.id.expand_content_tv);
-        mLayoutExpandMore = mRootView.findViewById(R.id.expand_ll);
-        mIconExpand = mRootView.findViewById(R.id.expand_iv);
-        mTvExpand = mRootView.findViewById(R.id.expand_tv);
-        mTvExpandHelper = mRootView.findViewById(R.id.expand_helper_tv);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Log.d(TAG, "onMeasure,measureWidth = " + getMeasuredWidth());
+        if (mMeasuredWidth <= 0 && getMeasuredWidth() > 0) {
+            mMeasuredWidth = getMeasuredWidth();
+            measureEllipsizeText(mMeasuredWidth);
+        }
+    }
 
-        int textSize = dp2px(mContext, mContentTextSize);
-        setExpandMoreIcon(mExpandIconResId);
+    private void initView() {
+        mRootView = inflate(mContext, R.layout.layout_expand, this);
+        mTvContent = findViewById(R.id.expand_content_tv);
+        mLayoutExpandMore = findViewById(R.id.expand_ll);
+        mIconExpand = findViewById(R.id.expand_iv);
+        mTvExpand = findViewById(R.id.expand_tv);
+        mTvExpandHelper = findViewById(R.id.expand_helper_tv);
+
+        if (mExpandIconResId != 0) {
+            mIconExpand.setImageResource(mExpandIconResId);
+        }
         mTvExpand.setText(mExpandMoreStr);
-        mTvContent.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+
+        mTvContent.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContentTextSize);
         // 辅助TextView，与内容TextView大小相等，保证末尾图标和文字与内容文字居中显示
-        mTvExpandHelper.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        mTvExpand.setTextSize(TypedValue.COMPLEX_UNIT_PX, dp2px(mContext, mExpandTextSize));
+        mTvExpandHelper.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContentTextSize);
+        mTvExpand.setTextSize(TypedValue.COMPLEX_UNIT_PX, mExpandTextSize);
+        mTvContent.setLineSpacing(mLineSpacingExtra, mLineSpacingMultiplier);
+        mTvExpandHelper.setLineSpacing(mLineSpacingExtra, mLineSpacingMultiplier);
+        mTvExpand.setLineSpacing(mLineSpacingExtra, mLineSpacingMultiplier);
 
         setContentTextColor(mContentTextColor);
         setExpandTextColor(mExpandTextColor);
@@ -157,17 +200,6 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
                 mIconExpand.setVisibility(VISIBLE);
                 mTvExpand.setVisibility(VISIBLE);
                 break;
-        }
-
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        Log.d(TAG, "onMeasure,measureWidth = " + getMeasuredWidth());
-        if (mMeasuredWidth <= 0 && getMeasuredWidth() > 0) {
-            mMeasuredWidth = getMeasuredWidth();
-            measureEllipsizeText(mMeasuredWidth);
         }
     }
 
@@ -194,10 +226,11 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         mOnExpandStateChangeListener = onExpandStateChangeListener;
         // 此处需要先设置mTvContent的text属性，防止在列表中，由于没有获取到控件宽度mMeasuredWidth，先执行onMeasure方法测量时，导致文本只能显示一行的问题
         // 提前设置好text，再执行onMeasure，则没有该问题
-        mTvContent.setMaxLines(mMaxLine);
+        mTvContent.setMaxLines(mMaxLines);
         mTvContent.setText(mOriginContentStr);
+        // 获取文字的宽度
         if (mMeasuredWidth <= 0) {
-            // 获取文字的宽度
+            Log.d(TAG, "宽度尚未获取到，第一次加载");
             getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -208,11 +241,12 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
                         getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     }
                     mMeasuredWidth = getMeasuredWidth();
-                    Log.d(TAG, "onGlobalLayout,控件宽度 = " + getMeasuredWidth());
+                    Log.d(TAG, "onGlobalLayout,控件宽度 = " + mMeasuredWidth);
                     measureEllipsizeText(mMeasuredWidth);
                 }
             });
         } else {
+            Log.d(TAG, "宽度已获取到，非第一次加载");
             measureEllipsizeText(mMeasuredWidth);
         }
     }
@@ -236,9 +270,9 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
      */
     private void handleMeasureEllipsizeText(int lineWidth) {
         TextPaint textPaint = mTvContent.getPaint();
-        StaticLayout staticLayout = new StaticLayout(mOriginContentStr, textPaint, lineWidth, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+        StaticLayout staticLayout = new StaticLayout(mOriginContentStr, textPaint, lineWidth, Layout.Alignment.ALIGN_NORMAL, mLineSpacingMultiplier, mLineSpacingExtra, false);
         int lineCount = staticLayout.getLineCount();
-        if (lineCount <= mMaxLine) {
+        if (lineCount <= mMaxLines) {
             // 不足最大行数，直接设置文本
             //少于最小展示行数，不再展示更多相关布局
             mEllipsizeStr = mOriginContentStr;
@@ -274,8 +308,8 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         }
         TextPaint textPaint = mTvContent.getPaint();
         // 获取到第mMinLineNum行的起始和结束位置
-        int startPos = staticLayout.getLineStart(mMaxLine - 1);
-        int endPos = staticLayout.getLineEnd(mMaxLine - 1);
+        int startPos = staticLayout.getLineStart(mMaxLines - 1);
+        int endPos = staticLayout.getLineEnd(mMaxLines - 1);
         Log.d(TAG, "startPos = " + startPos);
         Log.d(TAG, "endPos = " + endPos);
         // 修正，防止取子串越界
@@ -293,24 +327,24 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         if (lineContent != null) {
             textLength = textPaint.measureText(lineContent);
         }
-        Log.d(TAG, "第" + mMaxLine + "行 = " + lineContent);
-        Log.d(TAG, "第" + mMaxLine + "行 文本长度 = " + textLength);
+        Log.d(TAG, "第" + mMaxLines + "行 = " + lineContent);
+        Log.d(TAG, "第" + mMaxLines + "行 文本长度 = " + textLength);
 
-        // 预留宽度："..." + 展开布局与文本间距 +图标长度 + 展开文本长度
         String strEllipsizeMark = "...";
-        // 展开控件需要预留的长度
-        float reservedWidth = textPaint.measureText(strEllipsizeMark) + dp2px(mContext, 20) + getExpandLayoutReservedWidth();
+        // 展开控件需要预留的长度,预留宽度："..." + 展开布局与文本间距 +图标长度 + 展开文本长度
+        float reservedWidth = mSpaceMargin + textPaint.measureText(strEllipsizeMark) + getExpandLayoutReservedWidth();
         Log.d(TAG, "需要预留的长度 = " + reservedWidth);
-        if (reservedWidth + textLength <= lineWidth) {
-            // 足够空间展示
-            mEllipsizeStr = removeEndLineBreak(mOriginContentStr.substring(0, endPos)) + strEllipsizeMark;
-        } else {
-            // 空间不够，需要截取最后一行的字符串
+        int correctEndPos = endPos;
+        if (reservedWidth + textLength > lineWidth) {
+            // 空间不够，需要按比例截取最后一行的字符串，以确保展示的最后一行文本不会与可展开布局重叠
             float exceedSpace = reservedWidth + textLength - lineWidth;
-            int correctEndPos = endPos - (int) ((exceedSpace / textLength) * 1.0f * (endPos - startPos));
-            Log.d(TAG, "correctEndPos = " + correctEndPos);
-            mEllipsizeStr = removeEndLineBreak(mOriginContentStr.substring(0, correctEndPos)) + strEllipsizeMark;
+            if (textLength != 0) {
+                correctEndPos = endPos - (int) ((exceedSpace / textLength) * 1.0f * (endPos - startPos));
+            }
         }
+        Log.d(TAG, "correctEndPos = " + correctEndPos);
+        String ellipsizeStr = mOriginContentStr.substring(0, correctEndPos);
+        mEllipsizeStr = removeEndLineBreak(ellipsizeStr) + strEllipsizeMark;
     }
 
     /**
@@ -324,6 +358,9 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
             return;
         }
         int lineCount = staticLayout.getLineCount();
+        if (lineCount < 1) {
+            return;
+        }
         int startPos = staticLayout.getLineStart(lineCount - 1);
         int endPos = staticLayout.getLineEnd(lineCount - 1);
         Log.d(TAG, "最后一行 startPos = " + startPos);
@@ -363,7 +400,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         int iconWidth = 0;
         if (mExpandStyle == STYLE_DEFAULT || mExpandStyle == STYLE_ICON) {
             // ll布局中的内容，图标iv的宽是15dp，参考布局
-            iconWidth = dp2px(mContext, 15);
+            iconWidth = mExpandIconWidth;
         }
         float textWidth = 0f;
         if (mExpandStyle == STYLE_DEFAULT || mExpandStyle == STYLE_TEXT) {
@@ -420,7 +457,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
             mExpandIconResId = resId;
             // 当前处于收缩状态时，立即更新图标
             if (!mIsExpand) {
-                mIconExpand.setBackgroundResource(resId);
+                mIconExpand.setImageResource(resId);
             }
         }
     }
@@ -435,7 +472,7 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
             mCollapseIconResId = resId;
             // 当前处于展开状态时，立即更新图标
             if (mIsExpand) {
-                mIconExpand.setBackgroundResource(resId);
+                mIconExpand.setImageResource(resId);
             }
         }
     }
@@ -443,32 +480,67 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
     /**
      * 展开
      */
-    private void expand() {
+    public void expand() {
         setIsExpand(true);
         mTvContent.setMaxLines(Integer.MAX_VALUE);
         mTvContent.setText(mOriginContentStr);
-        setCollapseLessIcon(mCollapseIconResId);
         mTvExpand.setText(mCollapseLessStr);
+        if (mCollapseIconResId != 0) {
+            mIconExpand.setImageResource(mCollapseIconResId);
+        }
     }
 
     /**
      * 收起
      */
-    private void collapse() {
+    public void collapse() {
         setIsExpand(false);
         mTvContent.setMaxLines(Integer.MAX_VALUE);
         mTvContent.setText(mEllipsizeStr);
-        setExpandMoreIcon(mExpandIconResId);
         mTvExpand.setText(mExpandMoreStr);
+        if (mExpandIconResId != 0) {
+            mIconExpand.setImageResource(mExpandIconResId);
+        }
+    }
+
+    public int getLineCount() {
+        return mTvContent == null ? 0 : mTvContent.getLineCount();
+    }
+
+    public void setShrinkLines(int shrinkLines) {
+        mMaxLines = shrinkLines;
     }
 
     public void setIsExpand(boolean isExpand) {
         mIsExpand = isExpand;
     }
 
-    private int dp2px(Context context, float dpValue) {
-        final float densityScale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * densityScale + 0.5f);
+    public boolean isExpand() {
+        return mIsExpand;
+    }
+
+    /**
+     * 转换dp为px
+     *
+     * @param context
+     * @param dipValue
+     * @return
+     */
+    private int dp2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
+    }
+
+    /**
+     * 转换sp为px
+     *
+     * @param context
+     * @param spValue
+     * @return
+     */
+    public int sp2px(Context context, float spValue) {
+        float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
     }
 
     @Override
