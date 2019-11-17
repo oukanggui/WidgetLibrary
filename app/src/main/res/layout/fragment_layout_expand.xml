@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+        <com.baymax.widget.ExpandLayout
+            android:id="@+id/my_expand_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            app:maxLines="2"
+            app:expandIconResId = "@drawable/splitter_more"
+            app:collapseIconResId = "@drawable/splitter_less"
+            app:expandMoreText = "更多"
+            app:collapseLessText = "收起"
+            app:contentTextSize="20sp"
+            app:expandTextSize="16sp"
+            app:expandTextColor="@color/colorPrimaryDark"/>
+        <com.baymax.widget.ExpandLayout
+            android:id="@+id/my_expand_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            app:maxLines="2"
+            app:expandIconResId = "@drawable/splitter_more"
+            app:collapseIconResId = "@drawable/splitter_less"
+            app:expandMoreText = "更多"
+            app:collapseLessText = "收起"
+            app:contentTextSize="20sp"
+            app:expandTextSize="15sp"
+            app:expandTextColor="@color/colorPrimaryDark"
+            app:expandStyle="ICON"/>
+        <com.baymax.widget.ExpandLayout
+            android:id="@+id/my_expand_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            app:maxLines="2"
+            app:expandIconResId = "@drawable/splitter_more"
+            app:collapseIconResId = "@drawable/splitter_less"
+            app:expandMoreText = "更多"
+            app:collapseLessText = "收起"
+            app:contentTextSize="20sp"
+            app:expandTextSize="18sp"
+            app:expandTextColor="@color/colorPrimaryDark"
+            app:expandStyle="TEXT"/>
+    </LinearLayout>
+</ScrollView>

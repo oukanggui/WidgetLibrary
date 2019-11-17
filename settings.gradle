@@ -1,2 +1,2 @@
-include ':app', ':widget'
+include ':app', ':widget', ':base'
 rootProject.name='WidgetLibrary'

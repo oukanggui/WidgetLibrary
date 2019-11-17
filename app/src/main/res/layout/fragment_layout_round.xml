@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+        <com.baymax.widget.RoundButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="我是圆角控件"
+            android:textColor="@android:color/white"
+            app:backgroundColorFill="@color/colorAccent"
+            app:rx="5dp"
+            app:ry="5dp"/>
+
+        <com.baymax.widget.RoundButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="我是带边框圆角控件"
+            android:textColor="@android:color/black"
+            app:backgroundColorFill="@android:color/white"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="1dp"
+            app:rx="5dp"
+            app:ry="5dp"/>
+    </LinearLayout>
+</ScrollView>
