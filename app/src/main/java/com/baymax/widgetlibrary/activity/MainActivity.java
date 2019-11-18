@@ -8,6 +8,7 @@ import com.baymax.base.activity.BaseTabBarActivity;
 import com.baymax.widgetlibrary.fragment.ArrowLayoutFragment;
 import com.baymax.widgetlibrary.fragment.ExpandLayoutFragment;
 import com.baymax.widgetlibrary.fragment.MenuLayoutFragment;
+import com.baymax.widgetlibrary.fragment.RatingStarViewFragment;
 import com.baymax.widgetlibrary.fragment.RoundLayoutFragment;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class MainActivity extends BaseTabBarActivity {
     @Override
     protected List<Fragment> createFragments() {
         List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new RatingStarViewFragment());
         fragments.add(new ExpandLayoutFragment());
         fragments.add(new RoundLayoutFragment());
         fragments.add(new MenuLayoutFragment());
@@ -40,6 +42,7 @@ public class MainActivity extends BaseTabBarActivity {
     @Override
     protected List<String> createPagerTitles() {
         List<String> titles = new ArrayList<>();
+        titles.add("RatingStarView");
         titles.add("ExpandLayout");
         titles.add("RoundLayout");
         titles.add("MenuLayout");
