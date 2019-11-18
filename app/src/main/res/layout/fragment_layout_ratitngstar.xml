@@ -8,23 +8,37 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:gravity="center_horizontal">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:text="A、简述："
+            android:textColor="@android:color/black"
             android:layout_marginBottom="10dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:lineSpacingExtra="3dp"
             android:lineSpacingMultiplier="1.1"
-            android:text="描述：
-\n星星评分控件，优化改造于GitHub项目https://github.com/everhad/AndroidRatingStar，感谢原作者的启发，支持特性：
+            android:layout_marginBottom="10dp"
+            android:text="
+星星评分控件，优化改造于GitHub项目https://github.com/everhad/AndroidRatingStar，感谢原作者的启发，本控件支持特性：
 \n 1）支持任意小数比例颗星支持
 \n 2）填充色（前景色）、底色（背景色）、描边色
 \n 3）指定高度，宽度自适应
 \n 4）拐角弧度、描边宽度、星星间距
 \n 5）肥胖指数（star thickness），越胖越可爱
 \n 6）点击评分（不支持半颗星）"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="B、演示："
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold"/>
         <com.baymax.widget.ratingstar.RatingStarView
             android:layout_width="wrap_content"
             android:layout_height="20dp"
