@@ -34,7 +34,7 @@ public class ExpandLayoutFragment extends BaseFragment {
         mExpandLayoutIcon = view.findViewById(R.id.my_expand_icon);
         mExpandLayoutText = view.findViewById(R.id.my_expand_text);
         //要展示的文字内容
-        String contentStr = "啊哈啊哈啊哈啊哈哈哈啊哈啊哈哈哈啊哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或";
+        String contentStr = "我是正常的全中文文字，可以点击我展开查看更多或收起，我是图标+文字的默认模式";
         mExpandLayoutDefault.setContent(contentStr, new ExpandLayout.OnExpandStateChangeListener() {
             @Override
             public void onExpand() {
@@ -46,19 +46,9 @@ public class ExpandLayoutFragment extends BaseFragment {
                 mExpandLayoutDefault.setExpandTextColor(ContextCompat.getColor(mActivity, android.R.color.holo_red_dark));
             }
         });
-        String contentStr1 = "啊哈啊哈啊哈啊 Android、\n\n\nAndroid、哈哈哈啊哈啊AndroidAndroid、哈哈Android、Android、哈啊哈啊哈哈哈哈 哈哈哈哈哈哈哈哈哈哈哈或   或或或或或或或或或 或或或或或或或或或或   或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或";
-        mExpandLayoutIcon.setContent(contentStr1, new ExpandLayout.OnExpandStateChangeListener() {
-            @Override
-            public void onExpand() {
-                mExpandLayoutIcon.setCollapseLessIcon(R.drawable.splitter_less);
-            }
-
-            @Override
-            public void onCollapse() {
-                mExpandLayoutIcon.setExpandMoreIcon(R.drawable.splitter_more);
-            }
-        });
-        String contentStr2 = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy";
+        String contentStr1 = "我是图标样式，Android、Android、Android，中间有换行符\n\n\nAndroid、你好AndroidAndroid、哈哈Android、Android、Android你好";
+        mExpandLayoutIcon.setContent(contentStr1);
+        String contentStr2 = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
         mExpandLayoutText.setContent(contentStr2, new ExpandLayout.OnExpandStateChangeListener() {
             @Override
             public void onExpand() {

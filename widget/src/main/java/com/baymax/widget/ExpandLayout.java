@@ -129,6 +129,16 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
     public ExpandLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
+        initAttributeSet(context, attrs);
+        initView();
+    }
+
+    /**
+     * 初始化自定义属性
+     * @param context
+     * @param attrs
+     */
+    private void initAttributeSet(Context context, AttributeSet attrs){
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ExpandLayout);
         if (ta != null) {
             mMaxLines = ta.getInt(R.styleable.ExpandLayout_maxLines, 2);
@@ -151,19 +161,11 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
         if (mMaxLines < 1) {
             mMaxLines = 1;
         }
-        initView();
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        Log.d(TAG, "onMeasure,measureWidth = " + getMeasuredWidth());
-        if (mMeasuredWidth <= 0 && getMeasuredWidth() > 0) {
-            mMeasuredWidth = getMeasuredWidth();
-            measureEllipsizeText(mMeasuredWidth);
-        }
-    }
-
+    /**
+     * 初始化View
+     */
     private void initView() {
         mRootView = inflate(mContext, R.layout.layout_expand, this);
         mTvContent = findViewById(R.id.expand_content_tv);
@@ -197,6 +199,16 @@ public class ExpandLayout extends RelativeLayout implements View.OnClickListener
                 mIconExpand.setVisibility(VISIBLE);
                 mTvExpand.setVisibility(VISIBLE);
                 break;
+        }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Log.d(TAG, "onMeasure,measureWidth = " + getMeasuredWidth());
+        if (mMeasuredWidth <= 0 && getMeasuredWidth() > 0) {
+            mMeasuredWidth = getMeasuredWidth();
+            measureEllipsizeText(mMeasuredWidth);
         }
     }
 

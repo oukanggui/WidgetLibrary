@@ -58,9 +58,9 @@
         <attr name="contentTextSize" format="dimension" />
         <!--更多/收起文字大小-->
         <attr name="expandTextSize" format="dimension" />
-        <!--展开/搜索布局对应图标的宽度-->
+        <!--展开/收缩布局对应图标的宽度-->
         <attr name="expandIconWidth" format="dimension" />
-        <!--缩略文本展示时与展开/搜索布局的间距-->
+        <!--缩略文本展示时与展开/收缩布局的间距-->
         <attr name="spaceMargin" format="dimension" />
         <!--文本显示的lineSpacingExtra，对应于TextView的lineSpacingExtra属性-->
         <attr name="lineSpacingExtra" format="dimension" />
