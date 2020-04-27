@@ -2,9 +2,14 @@ package com.baymax.widgetlibrary.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.PopupWindow;
 
 import androidx.fragment.app.Fragment;
+
 import com.baymax.base.activity.BaseTabBarActivity;
+import com.baymax.widgetlibrary.R;
 import com.baymax.widgetlibrary.fragment.ArrowLayoutFragment;
 import com.baymax.widgetlibrary.fragment.ExpandLayoutFragment;
 import com.baymax.widgetlibrary.fragment.MenuLayoutFragment;
@@ -48,5 +53,34 @@ public class MainActivity extends BaseTabBarActivity {
         titles.add("MenuLayout");
         titles.add("ArrowLayout");
         return titles;
+    }
+
+    @Override
+    protected void onRightViewClicked(View view) {
+        super.onRightViewClicked(view);
+        PopupWindow popupWindow = makePopupWindow();
+        int[] xy = new int[2];
+        view.getLocationOnScreen(xy);
+        //popupWindow.showAtLocation(view, Gravity.RIGHT | Gravity.TOP, -xy[0] / 2, xy[1] + button.getWidth());
+        popupWindow.showAsDropDown(view,20, 20);
+    }
+
+    /**
+     * 创建PopupWindow
+     */
+    private PopupWindow makePopupWindow()
+    {
+        PopupWindow popupWindow = new PopupWindow(this);
+
+        View contentView = LayoutInflater.from(this).inflate(R.layout.item_menu_selected, null);
+        popupWindow.setContentView(contentView);
+        popupWindow.setBackgroundDrawable(null);
+        //设置PopupWindow可获得焦点
+        popupWindow.setFocusable(true);
+        //设置PopupWindow可触摸
+        popupWindow.setTouchable(true);
+        //设置非PopupWindow区域可触摸
+        popupWindow.setOutsideTouchable(true);
+        return popupWindow;
     }
 }

@@ -51,7 +51,7 @@ public abstract class BaseTitleBarActivity extends BaseActivity {
         mIvRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onRightViewClicked();
+                onRightViewClicked(v);
             }
         });
     }
@@ -61,8 +61,8 @@ public abstract class BaseTitleBarActivity extends BaseActivity {
      *
      * @param color Title布局显示的背景颜色
      */
-    public void setTitleBarBackgroundColor(int color){
-        if (mTitleLayout != null){
+    public void setTitleBarBackgroundColor(int color) {
+        if (mTitleLayout != null) {
             mTitleLayout.setBackgroundColor(color);
         }
     }
@@ -72,8 +72,8 @@ public abstract class BaseTitleBarActivity extends BaseActivity {
      *
      * @param drawable Title布局显示的背景drawable资源
      */
-    public void setTitleBarBackgroundDrawable(int drawable){
-        if (mTitleLayout != null){
+    public void setTitleBarBackgroundDrawable(int drawable) {
+        if (mTitleLayout != null) {
             mTitleLayout.setBackgroundResource(drawable);
         }
     }
@@ -94,7 +94,7 @@ public abstract class BaseTitleBarActivity extends BaseActivity {
      *
      * @param color
      */
-    public void setTitleTextColor(int color){
+    public void setTitleTextColor(int color) {
         if (mTitleView != null) {
             mTitleView.setTextColor(color);
         }
@@ -178,8 +178,10 @@ public abstract class BaseTitleBarActivity extends BaseActivity {
 
     /**
      * 子页面重写该方法处理RightView点击时的处理逻辑
+     *
+     * @param view 被点击的View
      */
-    protected void onRightViewClicked() {
+    protected void onRightViewClicked(View view) {
 
     }
 
